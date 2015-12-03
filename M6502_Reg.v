@@ -1,3 +1,5 @@
+(** This file defines the 6502 CPU registers. *)
+
 Require Import Coqlib.
 
 Module Type BitsM.
@@ -93,14 +95,14 @@ Definition word := Word.int.
 Inductive Reg8 : Set := A : Reg8 | X : Reg8 | Y : Reg8 | S : Reg8 | FLAGS : Reg8.
 Inductive Reg16 : Set := PC : Reg16.
 
-(* C : carry,
-   Z : zero, 
-   I : interrupt,
-   D : decimal mode status, 
-   B : breakpoint,
-   Bit 5: not used. Supposed to be logical 1 at all times,
-   V : overflow,
-   S : sign
+(** C : carry,
+      Z : zero, 
+      I : interrupt,
+      D : decimal mode status, 
+      B : breakpoint,
+      Bit 5: not used. Supposed to be logical 1 at all times,
+      V : overflow,
+      S : sign
 *)
  
 Inductive Flag : Set :=

@@ -1,2 +1,5 @@
 *.vo
 *.glob
+html
+*.d
+*.swp

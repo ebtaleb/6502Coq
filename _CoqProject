@@ -1,0 +1,3 @@
+-R . 6502Coq
+./Coqlib.v
+./M6502_Reg.v
