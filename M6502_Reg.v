@@ -16,19 +16,15 @@ Inductive Reg16 : Set := PC : Reg16.
 *)
  
 Inductive Flag : Set :=
-  | FlagCF : Flag
-  | FlagZF : Flag
-  | FlagIF : Flag
-  | FlagDF : Flag
-  | FlagBF : Flag
-  | FlagVF : Flag
-  | FlagSF : Flag.
-
-Definition RegFile8 := Reg8 -> byte.
-Definition RegFile16 := Reg16 -> word.
+  | CF : Flag
+  | ZF : Flag
+  | IntF : Flag
+  | DF : Flag
+  | BF : Flag
+  | VF : Flag
+  | SF : Flag.
 
 (* Register State *)
-Definition RegFile := (list RegFile8 * RegFile16)%type.
 
 Record RegF : Set :=
   mkState {
@@ -42,43 +38,48 @@ Record RegF : Set :=
 
 Definition setFlag (b: byte) (f: Flag): byte :=
   match f with
-  | FlagCF => Byte.repr 1
-  | FlagZF => Byte.repr 1
-  | FlagIF => Byte.repr 1
-  | FlagDF => Byte.repr 1
-  | FlagBF => Byte.repr 1
-  | FlagVF => Byte.repr 1
-  | FlagSF => Byte.repr 1
+  | _ => Byte.repr 1
   end.
 
 Definition clearFlag (b: byte) (f: Flag): byte :=
   match f with
-  | FlagCF => Byte.repr 0
-  | FlagZF => Byte.repr 0
-  | FlagIF => Byte.repr 0
-  | FlagDF => Byte.repr 0
-  | FlagBF => Byte.repr 0
-  | FlagVF => Byte.repr 0
-  | FlagSF => Byte.repr 0
+  | _ => Byte.repr 0
   end.
 
 Definition getFlag (b: byte) (f: Flag): bool :=
   match f with
-  | FlagCF => false
-  | FlagZF => false
-  | FlagIF => false
-  | FlagDF => false
-  | FlagBF => false
-  | FlagVF => false
-  | FlagSF => false
+  | _ => false
   end.
 
-(*Definition setReg8 : RegFile -> Reg8 -> byte -> RegFile :=
-  fun R r b =>
+Definition setReg8 : RegF -> Reg8 -> byte -> RegF :=
+  fun RF r b =>
     match r with
-      _ =>
+        A => mkState (b) (RF.(RX)) (RF.(RY)) (RF.(RSTATUS)) (RF.(RFLAGS)) (RF.(RPC))
+      | X => mkState (RF.(RA)) (b) (RF.(RY)) (RF.(RSTATUS)) (RF.(RFLAGS)) (RF.(RPC))
+      | Y => mkState (RF.(RA)) (RF.(RX)) (b) (RF.(RSTATUS)) (RF.(RFLAGS)) (RF.(RPC))
+      | STATUS => mkState (RF.(RA)) (RF.(RX)) (RF.(RY)) (b) (RF.(RFLAGS)) (RF.(RPC))
+      | FLAGS => mkState (RF.(RA)) (RF.(RX)) (RF.(RY)) (RF.(RSTATUS)) (b) (RF.(RPC))
     end.
 
-Definition getReg8 : RegFile -> Reg8 -> byte :=
-  fun R r => _RF8 R r.*)
+Definition getReg8 : RegF -> Reg8 -> byte :=
+  fun RF r =>
+    match r with
+        A => RF.(RA)
+      | X => RF.(RX)
+      | Y => RF.(RY)
+      | STATUS => RF.(RSTATUS)
+      | FLAGS => RF.(RFLAGS)
+    end.
+
+Definition setReg16 : RegF -> Reg16 -> word -> RegF :=
+  fun RF r w =>
+    match r with
+        PC => mkState (RF.(RA)) (RF.(RX)) (RF.(RY)) (RF.(RSTATUS)) (RF.(RFLAGS)) (w)
+    end.
+
+Definition getReg16 : RegF -> Reg16 -> word :=
+  fun RF r =>
+    match r with
+        PC => RF.(RPC)
+    end.
 
