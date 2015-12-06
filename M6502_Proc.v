@@ -15,3 +15,11 @@ Definition _R (S : State) :=
 
 Definition _pc :=
   (fun S : State => getReg16 (_R S) PC).
+
+Require Import ZArith.BinInt.
+
+Example test : Z.to_nat (Z.lxor 32 3) = 35.
+Proof.
+compute.
+reflexivity.
+Qed.
