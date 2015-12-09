@@ -36,19 +36,39 @@ Record RegF : Set :=
     RPC: word
   }.
 
+Require Import ZArith.BinInt.
+
 Definition setFlag (b: byte) (f: Flag): byte :=
   match f with
-  | _ => Byte.repr 1
+  | SF => Byte.repr (Z.lor (Byte.intval b) 128)
+  | VF => Byte.repr (Z.lor (Byte.intval b) 64)
+  | BF => Byte.repr (Z.lor (Byte.intval b) 16)
+  | DF => Byte.repr (Z.lor (Byte.intval b) 8)
+  | IntF => Byte.repr (Z.lor (Byte.intval b) 4)
+  | ZF => Byte.repr (Z.lor (Byte.intval b) 2)
+  | CF => Byte.repr (Z.lor (Byte.intval b) 1)
   end.
 
 Definition clearFlag (b: byte) (f: Flag): byte :=
   match f with
-  | _ => Byte.repr 0
+  | SF => Byte.repr (Z.land (Byte.intval b) (Z.lnot 128))
+  | VF => Byte.repr (Z.land (Byte.intval b) (Z.lnot 64))
+  | BF => Byte.repr (Z.land (Byte.intval b) (Z.lnot 16))
+  | DF => Byte.repr (Z.land (Byte.intval b) (Z.lnot 8))
+  | IntF => Byte.repr (Z.land (Byte.intval b) (Z.lnot 4))
+  | ZF => Byte.repr (Z.land (Byte.intval b) (Z.lnot 2))
+  | CF => Byte.repr (Z.land (Byte.intval b) (Z.lnot 1))
   end.
 
 Definition getFlag (b: byte) (f: Flag): bool :=
   match f with
-  | _ => false
+  | SF => Z.testbit (Byte.intval b) 7
+  | VF => Z.testbit (Byte.intval b) 6
+  | BF => Z.testbit (Byte.intval b) 4
+  | DF => Z.testbit (Byte.intval b) 3
+  | IntF => Z.testbit (Byte.intval b) 2
+  | ZF => Z.testbit (Byte.intval b) 1
+  | CF => Z.testbit (Byte.intval b) 0
   end.
 
 Definition setReg8 : RegF -> Reg8 -> byte -> RegF :=
@@ -82,4 +102,3 @@ Definition getReg16 : RegF -> Reg16 -> word :=
     match r with
         PC => RF.(RPC)
     end.
-

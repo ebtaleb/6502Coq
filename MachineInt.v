@@ -57,6 +57,17 @@ Definition repr (x: Z) : int :=
 Definition zero := repr 0.
 Definition one  := repr 1.
 
+Definition add (x y: int) : int :=
+  repr (unsigned x + unsigned y).
+Definition sub (x y: int) : int :=
+  repr (unsigned x - unsigned y).
+
+Require Import ZArith.BinInt.
+
+Definition and (x y: int): int := repr (Z.land (unsigned x) (unsigned y)).
+Definition or (x y: int): int := repr (Z.lor (unsigned x) (unsigned y)).
+Definition xor (x y: int) : int := repr (Z.lxor (unsigned x) (unsigned y)).
+
 End FI.
 
 Module BYTE_SZ <: BitsM.
@@ -89,4 +100,3 @@ Module Word := FI WORD_SZ.
 
 Definition byte := Byte.int.
 Definition word := Word.int.
-

@@ -45,9 +45,6 @@ Definition subseteq : Map -> Map -> Prop :=
   fun M1 M2 =>
     forall (x : A), in_dom x M1 -> M1 x = M2 x.
 
-
-
-
 Lemma put_get_eq : 
   forall (M : Map) (x: A) (y : B), (put M x y) x = Some y.
 Proof.
@@ -58,7 +55,6 @@ auto.
 intro.
 assert (x=x). auto. contradiction.
 Qed.
-
 
 Lemma pub_indepedent:
   forall (M : Map) (x x' : A) (y : B), x <> x' -> (put M x y) x' = M x'.
