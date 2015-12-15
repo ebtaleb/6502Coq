@@ -53,3 +53,23 @@ Lemma load_store_neq_8 :
   exact H.
 Qed.
 
+Fixpoint ldList (M : Mem) (l : Label) (n : nat) {struct n} : option (list byte) :=
+  match n with
+    O => Some nil
+  | S n' => match M l with
+	      None => None
+            | Some b => match (ldList M (l+1) n') with
+			  None => None
+			| Some l' => Some (b :: l')
+			end
+	    end
+  end.
+
+Fixpoint storeList (M : Mem) (l : Label) (bl : list byte) {struct bl} : Mem :=
+  match bl with
+    | nil => M
+    | b :: bl' => store8 (storeList M (l+1) bl') l b
+  end.
+
+Definition singleList : Label -> list byte -> Mem := storeList emp.
+
