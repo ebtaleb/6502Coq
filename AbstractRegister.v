@@ -15,24 +15,13 @@ Record RegF : Set :=
     RY: byte
 }.
 
-(*Inductive RegF : Set :=
- | mkState : byte -> byte -> byte -> RegF.*)
-
-
-(*Inductive RegF (RA RX RY: byte) : Set :=
- | mkState : RegF RA RX RY.*)
-
-
-
 Definition Inv_1 (B: RegF) : Prop := True.
-
-(*Definition Inv_1 (RA RX RY: byte) : Prop := True.*)
 
 Module Init.
 
 Definition action : RegF := mkState (Byte.repr 0) (Byte.repr 0) (Byte.repr 0).
 
-Lemma PO_Safety: forall S: RegF, let S' := action in Inv_1 S.
+Lemma PO_Safety: forall S: RegF, let S' := action in Inv_1 S'.
 intros S.
 compute.
 trivial.
@@ -50,15 +39,13 @@ Definition setReg8 : RegF -> Reg8 -> byte -> RegF :=
       | Y => mkState (RF.(RA)) (RF.(RX)) (b)
     end.
 
-Definition Guard : Prop := True.
 Definition action (S : RegF) (r : Reg8) (b : byte) : RegF := setReg8 S r b.
 
-Lemma PO_Safety: forall S: RegF, Guard -> let S' := action in Inv_1 S.
-intros S.
+Lemma PO_Safety: forall S: RegF, forall r: Reg8, forall b: byte, let S' := action S r b in Inv_1 S'.
+intros S r b.
 simpl.
 compute.
-intro.
-exact H.
+trivial.
 Qed.
 
 End SetRegister.
@@ -76,12 +63,11 @@ Definition getReg8 : RegF -> Reg8 -> byte :=
 Definition Guard : Prop := True.
 Definition action (S : RegF) (r : Reg8) : byte := getReg8 S r.
 
-Lemma PO_Safety: forall S: RegF, Guard -> let S' := action in Inv_1 S.
-intros S.
+Lemma PO_Safety: forall S: RegF, forall r: Reg8, let S' := action S r in Inv_1 S.
+intros S r.
 simpl.
 compute.
-intro.
-exact H.
+trivial.
 Qed.
 
 End GetRegisterValue.

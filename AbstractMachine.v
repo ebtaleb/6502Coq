@@ -24,6 +24,28 @@ Record Status : Set :=
   SF : bool
 }.
 
+(*Definition setFlag (S: Status) (f: Flag): Status :=
+  match f with
+  | Si => mkState S.() S.() S.() S.() S.() S.() true
+  | V => mkState S.() S.() S.() S.() S.() true S.()
+  | B => mkState S.() S.() S.() S.() S.() S.() true
+  | D => mkState S.() S.() S.() S.() S.() S.() true
+  | I => mkState S.() S.() S.() S.() S.() S.() true
+  | Z => mkState S.() S.() S.() S.() S.() S.() true
+  | C => mkState S.() S.() S.() S.() S.() S.() true.
+  end.*)
+
+(*Definition clearFlag (S: Status) (f: Flag): Status :=
+  match f with
+  | Si => 
+  | V => 
+  | B => 
+  | D => 
+  | I => 
+  | Z => 
+  | C => 
+  end.*)
+
 Definition State := (AbstractRegister.RegF * AbstractMemory.Mem * PC * Status)%type.
 
 Definition _R (S : State) :=
@@ -57,9 +79,6 @@ Definition Inv_1 (B: State) : Prop := True.
 Module Init.
 
 Definition Guard : Prop := True.
-
-(*Theorem PO_Safety: forall S: State,
-Guard S -> let S' := action S in Inv_1 S.*)
 
 End Init.
 
