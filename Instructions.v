@@ -20,7 +20,6 @@ Inductive Instr : Set :=
   | NOP : Instr
 .
 
-
 Module Instructions.
 
 Module Context.

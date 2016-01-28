@@ -27,8 +27,7 @@ Definition in_range (x: Z) :=
     end
   end.
 
-Record int: Set := mkint { intval: Z; intrange: in_range intval }.
-Record NIint: Set := mkNIint { _intval: Z; _intrange: in_range _intval; _NI : bool }.
+Record int: Set := mkint { intval: Z; intrange: in_range intval; _NI : bool }.
 
 Definition max_unsigned : Z := modulus - 1.
 Definition max_signed : Z := half_modulus - 1.
@@ -53,13 +52,12 @@ Proof.
 Qed.
 
 Definition repr (x: Z) : int := 
-  mkint (Zmod x modulus) (mod_in_range x).
+  mkint (Zmod x modulus) (mod_in_range x) (true).
 
-Definition reprNI (x: Z) : NIint := 
-  mkNIint (Zmod x modulus) (mod_in_range x) (true).
+Definition reprInit (x: Z) : int := 
+  mkint (Zmod x modulus) (mod_in_range x) (false).
 
-Definition isNI (x: NIint) : bool := x.(_NI).
-Definition setInit (x: NIint) : NIint := mkNIint (x.(_intval)) (x.(_intrange)) (false).
+Definition isNI (x: int) : bool := x.(_NI).
 
 Definition zero := repr 0.
 Definition one  := repr 1.
@@ -106,5 +104,4 @@ Module Byte := FI BYTE_SZ.
 Module Word := FI WORD_SZ.
 
 Definition byte := Byte.int.
-Definition NIbyte := Byte.NIint.
 Definition word := Word.int.
