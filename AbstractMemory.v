@@ -2,6 +2,12 @@ Require Import MachineInt.
 Require Import List.
 Require Import Insert.
 
+(**
+Une mémoire est définie comme étant une liste d'octets.
+Elle est indexable par un entier positif.
+On peut y stocker des données, et les récupérer.
+*)
+
 Module AbstractMemory.
 
 Module Context.
@@ -14,16 +20,16 @@ Definition Mem := list byte.
 
 Definition Guard (l: nat) : Prop := l >= 0 /\ l < Context.nb_memories.
 
+Definition Inv_1 (M: Mem) : Prop := True.
+
 Module Init.
 Definition Guard (limit:nat) : Prop := Context.nb_memories = limit.
 End Init.
 
 Module Store.
 
-Definition Inv_1 (M: Mem) : Prop := True.
-
 Definition store8 (M : Mem) (l : nat) (b : byte) : Mem := 
-match replace_at M l b with 
+match insert' M l b with 
 | Some M' => M'
 | None => M
 end.
@@ -41,17 +47,15 @@ End Store.
 
 Module Load.
 
-Definition Inv_1 (b: byte) : Prop := True.
-
 Definition load8 (M : Mem) (l : nat) : byte :=
-    match skipn l M with
-    | nil => Byte.repr 0
-    | h :: t => h
+    match nth' M l with
+    | None => Byte.repr 0
+    | Some x => x
     end.
 
 Definition action (S : Mem) (l : nat) : byte := load8 S l.
 
-Lemma PO_Safety: forall S: Mem, forall l: nat, Guard l -> let b' := action S l in Inv_1 b'.
+Lemma PO_Safety: forall S: Mem, forall l: nat, Guard l -> let b' := action S l in Inv_1 S.
 intros S l.
 compute.
 split.
@@ -64,10 +68,9 @@ Lemma load_store_eq_8 :
   forall (M : Mem) (l : nat) (b : byte), Load.load8 (Store.store8 M l b) l = b.
 intros S l b.
 unfold Store.store8.
-unfold replace_at.
+unfold insert'.
 compute.
 simpl.
 Admitted.
-
 
 End AbstractMemory.

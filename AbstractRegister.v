@@ -1,3 +1,6 @@
+(** Ce fichier contient un ensemble de définitions relativif au fonctionnement d'un registre
+    de calcul du 6502. *)
+
 Require Import MachineInt.
 
 Inductive Reg8 : Set := A : Reg8 | X : Reg8 | Y : Reg8.
@@ -7,6 +10,9 @@ Module AbstractRegister.
 Module Context.
 
 End Context.
+
+(** Définition de l'ensemble des registres de calcul du 6502. Ces registres peuvent
+tous contenir un entier sur 1 octet. *)
 
 Record RegF : Set :=
   mkState {
@@ -28,6 +34,9 @@ trivial.
 Qed.
 
 End Init.
+
+(** On définit ici les actions possible sur un registre. En l'occurence, c'est une
+mémoire qui retient la valeur qu'on lui donne et qu'on peut récupérer. *)
 
 Module SetRegister.
 

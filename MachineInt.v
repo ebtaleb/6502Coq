@@ -1,4 +1,11 @@
+(** Ce fichier contient un ensemble de définitions relatif aux
+entiers machines employés par le 6502. *)
+
 Require Import Coqlib.
+Require Import ZArith.BinInt.
+
+(** Les entiers machines sont soit sur 8 bits pour les registres de calcul, 
+soit sur 16 bits pour le compteur ordinal. *)
 
 Module Type BitsM.
 
@@ -26,6 +33,12 @@ Definition in_range (x: Z) :=
     | _  => False
     end
   end.
+
+(** On définit ici un type composite qui contient respectivement:
+    - l'entier représenté sur 8 ou 16 bits
+    - la valeur réelle de cet entier
+    - un booléen qui spécifie si la case mémoire représentée a été initialisée ou non.
+*)
 
 Record int: Set := mkint { intval: Z; intrange: in_range intval; _NI : bool }.
 
@@ -67,8 +80,6 @@ Definition add (x y: int) : int :=
 Definition sub (x y: int) : int :=
   repr (unsigned x - unsigned y).
 
-Require Import ZArith.BinInt.
-
 Definition and (x y: int): int := repr (Z.land (unsigned x) (unsigned y)).
 Definition or (x y: int): int := repr (Z.lor (unsigned x) (unsigned y)).
 Definition xor (x y: int) : int := repr (Z.lxor (unsigned x) (unsigned y)).
@@ -102,6 +113,8 @@ End WORD_SZ.
 
 Module Byte := FI BYTE_SZ.
 Module Word := FI WORD_SZ.
+
+(** Les types suivants sont exportés pour être accessibles par les autres modules. *)
 
 Definition byte := Byte.int.
 Definition word := Word.int.
